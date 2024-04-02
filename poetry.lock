@@ -860,6 +860,31 @@ test = ["certifi", "pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-co
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "curl-cffi"
+version = "0.6.2"
+description = "libcurl ffi bindings for Python, with impersonation support"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "curl_cffi-0.6.2-cp38-abi3-macosx_10_9_x86_64.whl", hash = "sha256:23b8a2872b160718c04b06b1f8aa4fb1a2f4f94bce7040493515e081a27cad19"},
+    {file = "curl_cffi-0.6.2-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:ad3c1cf5360810825ec4bc3da425f26ee4098878a615dab9d309a99afd883ba9"},
+    {file = "curl_cffi-0.6.2-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3d01de6ed737ad1924aaa0198195b9020c38e77ce90ea3d72b9eacf4938c7adf"},
+    {file = "curl_cffi-0.6.2-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:37e513cc149d024a2d625e202f2cc9d4423d2937343ea2e06f797d99779e62dc"},
+    {file = "curl_cffi-0.6.2-cp38-abi3-win32.whl", hash = "sha256:12e829af97cbf7c1d5afef177e786f6f404ddf163b08897a1ed087cadbeb4837"},
+    {file = "curl_cffi-0.6.2-cp38-abi3-win_amd64.whl", hash = "sha256:3791b7a9ae4cb1298165300f2dc2d60a86779f055570ae83163fc2d8a74bf714"},
+    {file = "curl_cffi-0.6.2.tar.gz", hash = "sha256:9ee519e960b5fc6e0bbf13d0ecba9ce5f6306cb929354504bf03cc30f59a8f63"},
+]
+
+[package.dependencies]
+certifi = "*"
+cffi = ">=1.12.0"
+
+[package.extras]
+build = ["cibuildwheel", "wheel"]
+dev = ["autoflake (==1.4)", "coverage (==6.4.1)", "cryptography (==38.0.3)", "flake8 (==6.0.0)", "flake8-bugbear (==22.7.1)", "flake8-pie (==0.15.0)", "httpx (==0.23.1)", "mypy (==0.971)", "nest-asyncio (==1.6.0)", "pytest (==7.1.2)", "pytest-asyncio (==0.19.0)", "pytest-trio (==0.7.0)", "ruff (==0.1.14)", "trio (==0.21.0)", "trio-typing (==0.7.0)", "trustme (==0.9.0)", "types-certifi (==2021.10.8.2)", "uvicorn (==0.18.3)", "websockets (==11.0.3)"]
+test = ["cryptography (==38.0.3)", "fastapi (==0.100.0)", "httpx (==0.23.1)", "nest-asyncio (==1.6.0)", "proxy.py (==2.4.3)", "pytest (==7.1.2)", "pytest-asyncio (==0.19.0)", "pytest-trio (==0.7.0)", "python-multipart (==0.0.6)", "trio (==0.21.0)", "trio-typing (==0.7.0)", "trustme (==0.9.0)", "types-certifi (==2021.10.8.2)", "uvicorn (==0.18.3)", "websockets (==11.0.3)"]
+
+[[package]]
 name = "dataclasses-json"
 version = "0.6.4"
 description = "Easily serialize dataclasses to and from JSON."
@@ -937,6 +962,26 @@ files = [
     {file = "docstring_parser-0.15-py3-none-any.whl", hash = "sha256:d1679b86250d269d06a99670924d6bce45adc00b08069dae8c47d98e89b667a9"},
     {file = "docstring_parser-0.15.tar.gz", hash = "sha256:48ddc093e8b1865899956fcc03b03e66bb7240c310fac5af81814580c55bf682"},
 ]
+
+[[package]]
+name = "duckduckgo-search"
+version = "5.2.2"
+description = "Search for words, documents, images, news, maps and text translation using the DuckDuckGo.com search engine."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "duckduckgo_search-5.2.2-py3-none-any.whl", hash = "sha256:1b1f399c82498968620eb55f0d644d5f1adca21c2642ac346e1f34dc66654a73"},
+    {file = "duckduckgo_search-5.2.2.tar.gz", hash = "sha256:a90240b8a22d554ac56e243ffaded0906d43660592eb7e4f760ef0e5089b1b2b"},
+]
+
+[package.dependencies]
+click = ">=8.1.7"
+curl-cffi = ">=0.6.2"
+orjson = ">=3.10.0"
+
+[package.extras]
+dev = ["mypy (>=1.9.0)", "pytest (>=8.1.1)", "ruff (>=0.3.4)"]
+lxml = ["lxml (>=5.1.1)"]
 
 [[package]]
 name = "embedchain"
@@ -1603,6 +1648,25 @@ docs = ["Sphinx", "furo"]
 test = ["objgraph", "psutil"]
 
 [[package]]
+name = "groq"
+version = "0.4.2"
+description = "The official Python library for the groq API"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "groq-0.4.2-py3-none-any.whl", hash = "sha256:5b2b472c64d9f35210e0487db465415d47162da3a114031ecbfc8843d26302a5"},
+    {file = "groq-0.4.2.tar.gz", hash = "sha256:42e8b0abd0f2b2da024b9a747d28960d62951a5364f078e1537c9fceeca8259d"},
+]
+
+[package.dependencies]
+anyio = ">=3.5.0,<5"
+distro = ">=1.7.0,<2"
+httpx = ">=0.23.0,<1"
+pydantic = ">=1.9.0,<3"
+sniffio = "*"
+typing-extensions = ">=4.7,<5"
+
+[[package]]
 name = "grpc-google-iam-v1"
 version = "0.13.0"
 description = "IAM API client library"
@@ -2101,6 +2165,21 @@ tenacity = ">=8.1.0,<9.0.0"
 
 [package.extras]
 extended-testing = ["jinja2 (>=3,<4)"]
+
+[[package]]
+name = "langchain-groq"
+version = "0.0.1"
+description = "An integration package connecting Groq and LangChain"
+optional = false
+python-versions = ">=3.8.1,<4.0"
+files = [
+    {file = "langchain_groq-0.0.1-py3-none-any.whl", hash = "sha256:fe270ac0fce72b9ecafe5dd5f27ac6d704932260cdef3e927a60049039450376"},
+    {file = "langchain_groq-0.0.1.tar.gz", hash = "sha256:3d33bef99f19890b33584d8a7031cda31a44553182cb6a1d8378530f06b27e62"},
+]
+
+[package.dependencies]
+groq = ">=0.4.1,<1"
+langchain-core = ">=0.1,<0.2"
 
 [[package]]
 name = "langchain-openai"
@@ -4972,4 +5051,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10.0,<3.12"
-content-hash = "46e30d885b03279e6f901f123665f247b08ae3ea36f3c54847f274891603c032"
+content-hash = "948c6590bc7db220e0ee3494e0ee02f24dd962bb9220ed0f25c0bdb16ced0a11"

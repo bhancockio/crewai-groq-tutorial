@@ -1,73 +1,65 @@
-from textwrap import dedent
 from crewai import Task
+from datetime import datetime
+from textwrap import dedent
+from langchain_community.tools import DuckDuckGoSearchRun
+
+from tools.search_tools import SearchTools
 
 
-class BookSummarizingTasks():
-
-    def format_book_title(self, book_title):
-        return book_title.replace(" ", "_")
-
-    def summarize_book(self, book_title, agent):
+class NewsAggregatorTasks():
+    def news_manager(self, agent, topics, research_tasks):
         return Task(
-            description=dedent(f"""Summarize the main ideas and key takeaways from the self-help book '{book_title}' to provide a concise overview.
-                
-                Please provide a summary that captures the essence of the book, highlighting its main points and key messages.
-                """),
+            description=dedent(
+                f"""Manage the research and collection of the top three latest news articles related {topics} on {datetime.today().strftime('%Y-%m-%d')}. 
+                    Each article should include a title, brief summary, and a link to the full article.
+
+                    IMPORTANT:
+                    - Only include articles from today: {datetime.today().strftime('%Y-%m-%d')}.
+                    - If an article is older than today, discard the old article and keep searching until you find a relevant article.
+                    """),
             agent=agent,
-            output_file=f"output/{self.format_book_title(book_title)}_Summary.md",
             expected_output=dedent("""
-                A summary that is concise and captures the main ideas and key takeaways of the book.
-                """)
+                A bulleted list for each topic that contains 3 news articles, each with a title, summary, and link.
+                """),
+            context=research_tasks
         )
 
-    def extract_frameworks(self, book_title, agent):
+    def research_news_for_topic(self, agent, topic):
         return Task(
-            description=dedent(f"""Identify and extract any frameworks, models, or structured approaches presented in the book '{book_title}'.
-                
-                Please outline the frameworks or models that the author uses to convey their ideas, making them easily accessible to readers.
-                """),
+            description=dedent(
+                f"""Collect three  news articles related to {topic} on {datetime.today().strftime('%Y-%m-%d')}. 
+                    Each article should include a title, brief summary, and a link to the full article.
+                    
+                    IMPORTANT:
+                    - Only include articles from today. 
+                    - If the article date is not today or if your missing info, keep searching until you find a relevant article.
+                    - If you can't find the date of the article, skip it and keep searching.
+                    - Provide a brief summary of each article. Two sentences max.
+                    """),
             agent=agent,
-            output_file=f"output/{self.format_book_title(book_title)}_Frameworks.md",
             expected_output=dedent("""
-                A list of frameworks, models, or structured approaches extracted from the book.
-                """)
+                A bulleted list containing 3 news articles, each with a title, summary, and link.
+                """),
+            tools=[SearchTools.search_internet],
+            async_execution=True,
         )
 
-    def identify_action_items(self, book_title, agent):
+    def compile_news_report(self, agent, topics, finalized_news):
         return Task(
-            description=dedent(f"""Identify actionable advice or steps that readers can take based on the content of the book '{book_title}'.
-                
-                Please extract practical steps or advice from the book, providing readers with clear guidance on how to apply the book's teachings in their lives.
-                """),
+            description=dedent(
+                f"""Compile the research for the {topics} topics into a Markdown report. 
+                    The report should include a title, brief summary, and a link for each article.
+                    
+                     IMPORTANT:
+                    - The final report should be well-structured and easy to read in Markdown format.
+                        - Use headers, bullet points, and links to make the report visually appealing.
+                    - You must include 3 articles for each topic.
+                    - The report shouldn't include any other commentary or narration.
+                    """),
             agent=agent,
-            output_file=f"output/{self.format_book_title(book_title)}_Action_Items.md",
+            output_file="output/News_Report.md",
             expected_output=dedent("""
-                A list of actionable steps or advice extracted from the book.
-                """)
-        )
-
-    def extract_quotes(self, book_title, agent):
-        return Task(
-            description=dedent(f"""Extract notable quotes or key phrases from the book '{book_title}' for quick reference.
-                
-                Please identify and extract memorable or significant quotes from the book, highlighting the author's most impactful words.
+                A Markdown report with titles, summaries, and links for each tech and political news article.
                 """),
-            agent=agent,
-            output_file=f"output/{self.format_book_title(book_title)}_Quotes.md",
-            expected_output=dedent("""
-                A list of notable quotes or key phrases extracted from the book.
-                """)
-        )
-
-    def summarize_chapters(self, book_title, agent):
-        return Task(
-            description=dedent(f"""Provide a summary for each chapter of the book '{book_title}', helping readers understand the focus and flow of the content.
-                
-                Please break down the book into manageable sections, summarizing each chapter to give readers an overview of its content and purpose.
-                """),
-            agent=agent,
-            output_file=f"output/{self.format_book_title(book_title)}_Chapter_Summaries.md",
-            expected_output=dedent("""
-                A summary for each chapter of the book, providing an overview of its content and purpose.
-                """)
+            context=[finalized_news]
         )

@@ -1,74 +1,63 @@
+import os
+import time
 from crewai import Crew, Process
-from agents import BookSummarizingAgents
-from tasks import BookSummarizingTasks
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
+from agents import NewsAggregatorAgents
+from tasks import NewsAggregatorTasks
 
+# 0. Setup environment
 from dotenv import load_dotenv
 load_dotenv()
 
-# Initialize LLM
-OpenAIGPT4 = ChatOpenAI(
-    model="gpt-4",
+llm = ChatGroq(
+    api_key=os.getenv("GROQ_API_KEY"),
 )
+topics = ["tech", "politics"]
 
 # 1. Create agents
-agents = BookSummarizingAgents()
+agents = NewsAggregatorAgents()
 
-book_summarizer = agents.book_summarizer()
-framework_extractor = agents.framework_extractor()
-action_items_agent = agents.action_items_agent()
-quotes_extractor = agents.quotes_extractor()
-chapter_summarizer = agents.chapter_summarizer()
+news_collector = agents.news_collector(topics=topics)
+news_collector_for_topic = agents.news_collector_for_topic()
+news_report_compiler = agents.news_report_compiler()
 
-# Book title
-book_title = "The 7 Habits of Highly Effective People"
+# 2. Create tasks
+tasks = NewsAggregatorTasks()
 
-# 2. Creates tasks
-tasks = BookSummarizingTasks()
 
-summarize_book_task = tasks.summarize_book(
-    book_title=book_title,
-    agent=book_summarizer,
-)
-extract_frameworks_task = tasks.extract_frameworks(
-    book_title=book_title,
-    agent=framework_extractor,
-)
-identify_action_items_task = tasks.identify_action_items(
-    book_title=book_title,
-    agent=action_items_agent,
-)
-extract_quotes_task = tasks.extract_quotes(
-    book_title=book_title,
-    agent=quotes_extractor,
-)
-summarize_chapters_task = tasks.summarize_chapters(
-    book_title=book_title,
-    agent=chapter_summarizer,
-)
+news_research_tasks = []
+for topic in topics:
+    news_research_tasks.append(
+        tasks.research_news_for_topic(agent=news_collector_for_topic, topic=topic))
+
+news_manager_task = tasks.news_manager(
+    agent=news_collector, topics=topics, research_tasks=news_research_tasks)
+
+compile_news_report = tasks.compile_news_report(
+    agent=news_report_compiler, topics=topics, finalized_news=news_manager_task)
 
 # Setup Crew
 crew = Crew(
     agents=[
-        book_summarizer,
-        framework_extractor,
-        action_items_agent,
-        quotes_extractor,
-        chapter_summarizer
+        news_collector,
+        news_collector_for_topic,
+        news_report_compiler
     ],
     tasks=[
-        summarize_book_task,
-        extract_frameworks_task,
-        identify_action_items_task,
-        extract_quotes_task,
-        summarize_chapters_task
+        *news_research_tasks,
+        news_manager_task,
+        compile_news_report
     ],
+    max_rpm=29
 )
 
 # Kick off the crew
+start_time = time.time()
+
 results = crew.kickoff()
 
-print("Crew usage", crew.usage_metrics)
+end_time = time.time()
+elapsed_time = end_time - start_time
 
-print("Crew work results:")
-print(results)
+print(f"Crew kickoff took {elapsed_time} seconds.")
+print("Crew usage", crew.usage_metrics)

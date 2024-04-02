@@ -1,48 +1,66 @@
+from datetime import datetime
+import os
 from crewai import Agent
+from langchain_groq import ChatGroq
+
+from langchain_openai import ChatOpenAI
 
 
-class BookSummarizingAgents():
-    def book_summarizer(self):
-        return Agent(
-            role="Book Summarizer",
-            goal="""Summarize the main ideas and key takeaways from a self-help book to provide a concise overview.""",
-            backstory="""As a Book Summarizer, you are responsible for extracting the essence of the book, highlighting its main points and providing a summary that captures the author's key messages.""",
-            allow_delegation=True,
-            verbose=True
+class NewsAggregatorAgents():
+    def __init__(self):
+        self.llm = ChatGroq(
+            api_key=os.getenv("GROQ_API_KEY"),
         )
 
-    def framework_extractor(self):
+        # self.llm = ChatOpenAI(
+        #     model="gpt-4",
+        # )
+
+    def news_collector(self, topics):
         return Agent(
-            role="Framework Extractor",
-            goal="""Identify and extract any frameworks, models, or structured approaches presented in the book.""",
-            backstory="""As a Framework Extractor, you are responsible for recognizing and outlining the frameworks or models that the author uses to convey their ideas, making them easily accessible to readers.""",
-            allow_delegation=True,
-            verbose=True
+            role="News Collector",
+            goal=f"""
+                Manage the research and collection of the today's news related to the 
+                following topics: {topics}. 
+
+                Today's date is {datetime.today().strftime('%Y-%m-%d')}.
+
+                Each article should include a title, published date, 
+                brief summary, and a link to the full article.
+                """,
+            backstory="""
+                As a News Collector, you are responsible for finding today's news
+                on certain topics.
+                You only report on today's news""",
+            verbose=True,
+            llm=self.llm
         )
 
-    def action_items_agent(self):
+    def news_collector_for_topic(self):
         return Agent(
-            role="Action Items Agent",
-            goal="""Identify actionable advice or steps that readers can take based on the book's content.""",
-            backstory="""As an Action Items Agent, you are responsible for extracting practical steps or advice from the book, providing readers with clear guidance on how to apply the book's teachings in their lives.""",
-            allow_delegation=True,
-            verbose=True
+            role="News Collector For Topic",
+            goal=f"""
+                Collect news articles from {datetime.today().strftime('%Y-%m-%d')} 
+                related to a specified topic.""",
+            backstory="""
+                As a News Collector, you are responsible for 
+                searching the internet to find today's news
+                on a specified topic.
+
+                You only report on today's news""",
+            verbose=True,
+            llm=self.llm
         )
 
-    def quotes_extractor(self):
+    def news_report_compiler(self):
         return Agent(
-            role="Quotes Extractor",
-            goal="""Extract notable quotes or key phrases from the book for quick reference.""",
-            backstory="""As a Quotes Extractor, you are responsible for identifying and extracting memorable or significant quotes from the book, highlighting the author's most impactful words.""",
-            allow_delegation=True,
-            verbose=True
-        )
-
-    def chapter_summarizer(self):
-        return Agent(
-            role="Chapter Summarizer",
-            goal="""Provide a summary for each chapter of the book, helping readers understand the focus and flow of the content.""",
-            backstory="""As a Chapter Summarizer, you are responsible for breaking down the book into manageable sections, summarizing each chapter to give readers an overview of its content and purpose.""",
-            allow_delegation=True,
-            verbose=True
+            role="News Report Compiler",
+            goal="""Compile the collected news articles into a Markdown report.""",
+            backstory="""
+                As a News Report Compiler, you are responsible for organizing 
+                the collected news articles into a coherent and well-structured
+                Markdown report.
+                """,
+            verbose=True,
+            llm=self.llm
         )
