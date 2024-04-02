@@ -1,0 +1,10 @@
+first_name,last_name,email,bio,last_conversation
+John,Smith,john.smith@example.com,"Software engineer with 10+ years of experience in backend development.","Discussed the upcoming project timeline and requirements."
+Alice,Johnson,alice.johnson@example.com,"Frontend developer passionate about user experience design.","Reviewed the latest UI mockups and provided feedback."
+Michael,Williams,michael.williams@example.com,"Full-stack developer specializing in JavaScript frameworks.","Asked about the new features being implemented and their impact on existing functionality."
+Sarah,Brown,sarah.brown@example.com,"Software architect with expertise in scalable systems design.","Suggested improvements to the database schema for better performance."
+David,Jones,david.jones@example.com,"DevOps engineer focused on automation and continuous integration.","Inquired about the deployment process and potential bottlenecks."
+Emily,Davis,emily.davis@example.com,"QA engineer with a keen eye for detail and thorough testing approach.","Reported several bugs and discussed prioritization for the next sprint."
+Daniel,Miller,daniel.miller@example.com,"Software engineer interested in machine learning and AI applications.","Shared some new research findings related to AI algorithms."
+Jessica,Wilson,jessica.wilson@example.com,"Backend developer with experience in microservices architecture.","Discussed the feasibility of integrating a new microservice into the existing system."
+Matthew,Martin,matthew.martin@example.com,"Frontend developer enthusiastic about new web technologies.","Asked for recommendations on optimizing the frontend performance."

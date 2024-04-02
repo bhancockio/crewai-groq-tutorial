@@ -1,54 +1,96 @@
 import os
 import time
-from crewai import Crew, Process
+import csv
+from crewai import Crew
 from langchain_groq import ChatGroq
-from agents import NewsAggregatorAgents
-from tasks import NewsAggregatorTasks
+from agents import EmailPersonalizationAgents
+from tasks import PersonalizeEmailTask
 
 # 0. Setup environment
 from dotenv import load_dotenv
 load_dotenv()
 
-llm = ChatGroq(
-    api_key=os.getenv("GROQ_API_KEY"),
-)
-topics = ["tech", "politics"]
+email_template = """
+Hey [Name]!
+
+Just a quick reminder that we have a Skool community where you can 
+join us for weekly coaching calls every Tuesday at 6 PM Eastern time.
+The community is completely free and we're about to hit the 500
+user milestone. We'd love to have you join us!
+
+If you have any questions or need help with your projects, 
+this is a great place to connect with others and get support. 
+
+If you're enjoying the AI-related content, make sure to check out 
+some of the other videos on my channel. Don't forget to hit that 
+like and subscribe button to stay updated with the latest content. 
+Looking forward to seeing you in the community!
+
+Best regards,
+Brandon Hancock
+"""
 
 # 1. Create agents
-agents = NewsAggregatorAgents()
+agents = EmailPersonalizationAgents()
 
-news_collector = agents.news_collector(topics=topics)
-news_collector_for_topic = agents.news_collector_for_topic()
-news_report_compiler = agents.news_report_compiler()
+email_personalizer = agents.personalize_email_agent()
+ghostwriter = agents.ghostwriter_agent()
 
 # 2. Create tasks
-tasks = NewsAggregatorTasks()
+tasks = PersonalizeEmailTask()
 
+personalize_email_tasks = []
+ghostwrite_email_tasks = []
 
-news_research_tasks = []
-for topic in topics:
-    news_research_tasks.append(
-        tasks.research_news_for_topic(agent=news_collector_for_topic, topic=topic))
+# Path to the CSV file containing client information
+csv_file_path = 'clients_medium.csv'
 
-news_manager_task = tasks.news_manager(
-    agent=news_collector, topics=topics, research_tasks=news_research_tasks)
+# Open the CSV file
+with open(csv_file_path, mode='r', newline='') as file:
+    # Create a CSV reader object
+    csv_reader = csv.DictReader(file)
 
-compile_news_report = tasks.compile_news_report(
-    agent=news_report_compiler, topics=topics, finalized_news=news_manager_task)
+    # Iterate over each row in the CSV file
+    for row in csv_reader:
+        # Access each field in the row
+        recipient = {
+            'first_name': row['first_name'],
+            'last_name': row['last_name'],
+            'email': row['email'],
+            'bio': row['bio'],
+            'last_conversation': row['last_conversation']
+        }
+
+        # Create a personalize_email task for each recipient
+        personalize_email_task = tasks.personalize_email(
+            agent=email_personalizer,
+            recipient=recipient,
+            email_template=email_template
+        )
+
+        # Create a ghostwrite_email task for each recipient
+        ghostwrite_email_task = tasks.ghostwrite_email(
+            agent=ghostwriter,
+            draft_email=personalize_email_task,
+            recipient=recipient
+        )
+
+        # Add the task to the crew
+        personalize_email_tasks.append(personalize_email_task)
+        ghostwrite_email_tasks.append(ghostwrite_email_task)
+
 
 # Setup Crew
 crew = Crew(
     agents=[
-        news_collector,
-        news_collector_for_topic,
-        news_report_compiler
+        email_personalizer,
+        ghostwriter
     ],
     tasks=[
-        *news_research_tasks,
-        news_manager_task,
-        compile_news_report
+        *personalize_email_tasks,
+        *ghostwrite_email_tasks
     ],
-    # max_rpm=29
+    max_rpm=29
 )
 
 # Kick off the crew

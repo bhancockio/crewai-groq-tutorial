@@ -1,67 +1,46 @@
-from datetime import datetime
 import os
 from crewai import Agent
 from langchain_groq import ChatGroq
-
 from langchain_openai import ChatOpenAI
 
 
-class NewsAggregatorAgents():
+class EmailPersonalizationAgents():
     def __init__(self):
         self.llm = ChatGroq(
             api_key=os.getenv("GROQ_API_KEY"),
         )
 
         # self.llm = ChatOpenAI(
-        #     model="gpt-4",
+        #     model="gpt-4-turbo-preview",
         # )
 
-    def news_collector(self, topics):
+    def personalize_email_agent(self):
         return Agent(
-            role="News Collector",
+            role="Email Personalizer",
             goal=f"""
-                Manage the research and collection of the today's news related to the 
-                following topics: {topics}. 
+                Personalize template emails for recipients using their information.
 
-                Today's date is {datetime.today().strftime('%Y-%m-%d')}.
-
-                Each article should include a title, published date, 
-                brief summary, and a link to the full article.
+                Given a template email and recipient information (name, email, bio, last conversation), personalize the email by incorporating the recipient's details 
+                into the email while maintaining the core message and structure of the original email. 
+                This involves updating the introduction, body, and closing of the email to make it more personal and engaging for each recipient.
                 """,
             backstory="""
-                As a News Collector, you are responsible for finding today's news
-                on certain topics.
-                You only report on today's news""",
+                As an Email Personalizer, you are responsible for customizing template emails for individual recipients based on their information and previous interactions.
+                """,
             verbose=True,
             llm=self.llm
         )
 
-    def news_collector_for_topic(self):
+    def ghostwriter_agent(self):
         return Agent(
-            role="News Collector For Topic",
+            role="Ghostwriter",
             goal=f"""
-                Collect news articles from {datetime.today().strftime('%Y-%m-%d')} 
-                related to a specified topic.""",
-            backstory="""
-                As a News Collector, you are responsible for 
-                searching the internet to find today's news
-                on a specified topic.
+                Revise draft emails to adopt the Ghostwriter's writing style.
 
-                You only report on today's news""",
-            verbose=True,
-            llm=self.llm
-        )
-
-    def news_report_compiler(self):
-        return Agent(
-            role="News Report Compiler",
-            goal="""
-                Compile the collected news articles into a Markdown report. 
-                Don't summarize anything. Just format the info into markdown and save it.""",
+                Use an informal, engaging, and slightly sales-oriented tone, mirroring the Ghostwriter's final email communication style.
+                """,
             backstory="""
-                As a News Report Compiler, you are responsible for organizing 
-                the collected news articles into a coherent and well-structured
-                Markdown report.
+                As a Ghostwriter, you are responsible for revising draft emails to match the Ghostwriter's writing style, focusing on clear, direct communication with a friendly and approachable tone.
                 """,
             verbose=True,
             llm=self.llm
