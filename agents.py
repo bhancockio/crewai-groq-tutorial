@@ -28,7 +28,9 @@ class EmailPersonalizationAgents():
                 As an Email Personalizer, you are responsible for customizing template emails for individual recipients based on their information and previous interactions.
                 """,
             verbose=True,
-            llm=self.llm
+            llm=self.llm,
+            max_iter=2,
+
         )
 
     def ghostwriter_agent(self):
@@ -43,5 +45,6 @@ class EmailPersonalizationAgents():
                 As a Ghostwriter, you are responsible for revising draft emails to match the Ghostwriter's writing style, focusing on clear, direct communication with a friendly and approachable tone.
                 """,
             verbose=True,
-            llm=self.llm
+            llm=self.llm,
+            max_iter=2,
         )

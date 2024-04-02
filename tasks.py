@@ -19,7 +19,9 @@ class PersonalizeEmailTask():
                 
                 The template email is as follows:
 
+                ```
                 {email_template}
+                ```
             """,
             agent=agent,
             expected_output=f"Personalized email draft.",
@@ -29,15 +31,13 @@ class PersonalizeEmailTask():
     def ghostwrite_email(self, agent, draft_email, recipient):
         return Task(
             description=f"""
-                Revise the draft email to adopt the following writing style:
+                Revise the draft email to adopt the following writing style.
 
-                Use a more informal, engaging, and slightly sales-oriented tone, mirroring ghost writer's final email communication style. 
-                This approach prioritizes clear, direct communication while maintaining a friendly and approachable tone. 
-                Use straightforward language, including phrases like "Hey [Name]!" to start emails or messages. 
-                It will outline steps or strategies in a structured manner, using bullet points or numbered lists for clarity. 
-                The communication will be solution-focused, providing reasons for recommendations and outlining next steps clearly. 
-                When discussing technical aspects or planning, the GPT will aim to be concise yet thorough, ensuring clear rationale behind decisions and well-defined action items. 
-                The tone will be optimistic and encouraging, aiming to build rapport and motivate action, while staying grounded in practical advice.
+                Writing Style:
+                - Use a more informal, engaging, and slightly sales-oriented tone, mirroring ghost writer's final email communication style. 
+                - This approach prioritizes clear, direct communication while maintaining a friendly and approachable tone. 
+                - Use straightforward language, including phrases like "Hey [Name]!" to start emails or messages. 
+                - The tone will be optimistic and encouraging, aiming to build rapport and motivate action, while staying grounded in practical advice.
 
                 Important Notes:
                 - Do not use emojis.
