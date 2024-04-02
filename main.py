@@ -48,7 +48,7 @@ crew = Crew(
         news_manager_task,
         compile_news_report
     ],
-    max_rpm=29
+    # max_rpm=29
 )
 
 # Kick off the crew

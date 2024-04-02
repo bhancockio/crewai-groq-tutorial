@@ -55,7 +55,9 @@ class NewsAggregatorAgents():
     def news_report_compiler(self):
         return Agent(
             role="News Report Compiler",
-            goal="""Compile the collected news articles into a Markdown report.""",
+            goal="""
+                Compile the collected news articles into a Markdown report. 
+                Don't summarize anything. Just format the info into markdown and save it.""",
             backstory="""
                 As a News Report Compiler, you are responsible for organizing 
                 the collected news articles into a coherent and well-structured
