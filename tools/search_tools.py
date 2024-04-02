@@ -1,14 +1,22 @@
+from typing import Type
 import json
 import os
 
+from pydantic.v1 import BaseModel, Field
 import requests
-from langchain.tools import tool
 
 
-class SearchTools():
+class SerperSearchToolInput(BaseModel):
+    """Input for SerperSearchTool."""
+    query: str = Field(..., query="Query to search for on the internet.")
 
-    @tool("Search the internet")
-    def search_internet(query):
+
+class SerperSearchTool(BaseModel):
+    name: str = "Search the internet"
+    description: str = "A tool to search the internet for a given query."
+    args_schema: Type[BaseModel] = SerperSearchToolInput
+
+    def _run(self, query: str) -> str:
         """Useful to search the internet
         about a a given topic and return relevant results"""
         print("Searching the internet...")

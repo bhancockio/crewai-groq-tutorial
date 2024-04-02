@@ -1,12 +1,14 @@
 from crewai import Task
 from datetime import datetime
 from textwrap import dedent
-from langchain_community.tools import DuckDuckGoSearchRun
 
-from tools.search_tools import SearchTools
+from tools.search_tools import SerperSearchTool
 
 
 class NewsAggregatorTasks():
+    def __init__(self):
+        self.search_tool = SerperSearchTool()
+
     def news_manager(self, agent, topics, research_tasks):
         return Task(
             description=dedent(
@@ -40,7 +42,7 @@ class NewsAggregatorTasks():
             expected_output=dedent("""
                 A bulleted list containing 3 news articles, each with a title, summary, and link.
                 """),
-            tools=[SearchTools.search_internet],
+            tools=[self.search_tool],
             async_execution=True,
         )
 
