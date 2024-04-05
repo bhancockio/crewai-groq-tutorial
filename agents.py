@@ -21,9 +21,11 @@ class EmailPersonalizationAgents():
             goal=f"""
                 Personalize template emails for recipients using their information.
 
-                Given a template email and recipient information (name, email, bio, last conversation), personalize the email by incorporating the recipient's details 
+                Given a template email and recipient information (name, email, bio, last conversation), 
+                personalize the email by incorporating the recipient's details 
                 into the email while maintaining the core message and structure of the original email. 
-                This involves updating the introduction, body, and closing of the email to make it more personal and engaging for each recipient.
+                This involves updating the introduction, body, and closing of the email to make 
+                it more personal and engaging for each recipient.
                 """,
             backstory="""
                 As an Email Personalizer, you are responsible for customizing template emails for individual recipients based on their information and previous interactions.
@@ -31,7 +33,6 @@ class EmailPersonalizationAgents():
             verbose=True,
             llm=self.llm,
             max_iter=2,
-
         )
 
     def ghostwriter_agent(self):

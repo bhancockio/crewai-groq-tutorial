@@ -11,7 +11,6 @@ pydantic = "^2.6.3"
 load-dotenv = "^0.1.0"
 crewai-tools = "^0.0.15"
 langchain-groq = "^0.0.1"
-duckduckgo-search = "^5.2.2"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md
